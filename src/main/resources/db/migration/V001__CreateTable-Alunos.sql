@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS alunos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    classe VARCHAR(50) NOT NULL,
+    curso VARCHAR(50) NOT NULL  
+);
