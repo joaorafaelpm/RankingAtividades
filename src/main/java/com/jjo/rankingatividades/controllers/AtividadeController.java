@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
+import com.jjo.rankingatividades.domain.DTOs.DescriptionDTO;
 import com.jjo.rankingatividades.domain.models.Status;
 import com.jjo.rankingatividades.domain.services.AtividadeService;
 import jakarta.validation.Valid;
@@ -47,17 +48,15 @@ public class AtividadeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AtividadeRepresentation> atualizarAtividade (@PathVariable Long id , @Valid @RequestBody AtividadeDTO atividadeDTO) {
-        Atividade atividade = atividadeAssembler.toEntity(atividadeDTO);
-        return ResponseEntity.ok(atividadeAssembler.toModel(atividadeService.salvar(atividade))) ;
+    public ResponseEntity<AtividadeRepresentation> atualizarAtividade (@PathVariable Long id , @Valid @RequestBody DescriptionDTO descriptionDTO) {
+        return ResponseEntity.ok(atividadeAssembler.toModel(atividadeService.atualizarAtividade(id , descriptionDTO.getDescricao()))) ;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Atividade> deletarAtividade (@PathVariable Long id) {
-        atividadeRepository.deleteById(id) ;
+        atividadeService.deletar(id);
         return ResponseEntity.status(204).build();
     }
-
 
 
 

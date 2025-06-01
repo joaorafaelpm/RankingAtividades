@@ -1,18 +1,18 @@
 package com.jjo.rankingatividades.domain.services;
 
-import com.jjo.rankingatividades.domain.DTOs.AlunoDTO;
+import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import com.jjo.rankingatividades.domain.models.Atividade;
-import com.jjo.rankingatividades.models.AlunoRepresentation;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.jjo.rankingatividades.assemblers.AlunoAssembler;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
-import com.jjo.rankingatividades.domain.exceptions.AlunoException;
+import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
 
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,28 +23,46 @@ public class AlunoService {
 
     @Transactional
     public Aluno procurarPeloId (Long id) {
-        return alunoRepository.findById(id).orElseThrow(()-> new AlunoException("Aluno não encontrado!"));
+        return alunoRepository.findById(id).orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
     }
 
     @Transactional
     public Aluno procurarPorAtividade (Atividade atividade) {
         return alunoRepository.findById(atividade.getAluno().getId())
-                .orElseThrow(()-> new AlunoException("Aluno não encontrado!"));
+                .orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
     }
 
 
 
     @Transactional
     public Aluno salvar(Aluno aluno) {
-        boolean emailEmUso = alunoRepository.findByEmail(aluno.getEmail())
-                .filter(alunoAtual -> !alunoAtual.equals(aluno))
-                .isPresent();
-        if (emailEmUso) {
-            throw new AlunoException("Email já está em uso!");
+        if (emailEmUso(aluno)) {
+            throw new AlunoEAtividadeException("Email já está em uso!");
         }
+
+        return alunoRepository.save(aluno);
+    }
+    @Transactional
+    public Aluno atualizar(Long id , Aluno aluno ) {
+        List<Atividade> atividades = procurarPeloId(id).getAtividades();
+        aluno.setAtividades(atividades);
+
+        if (emailEmUso(aluno)) {
+            Aluno alunoDoEmail = alunoRepository.findByEmail(aluno.getEmail()).orElseThrow() ;
+            if (aluno.getId() == alunoDoEmail.getId()) {
+                return alunoRepository.save(aluno);
+            }
+            throw new AlunoEAtividadeException("Email já está em uso!");
+        }
+
+
         return alunoRepository.save(aluno);
     }
 
+    @Transactional
+    public boolean emailEmUso (Aluno aluno) {
+        return alunoRepository.findByEmail(aluno.getEmail()).isPresent();
+    }
 
 
     @Transactional

@@ -22,7 +22,6 @@ import com.jjo.rankingatividades.assemblers.AlunoAssembler;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
 import com.jjo.rankingatividades.domain.services.AlunoService;
-import com.jjo.rankingatividades.domain.exceptions.AlunoException;
 import com.jjo.rankingatividades.models.AlunoRepresentation;
 
 
@@ -91,7 +90,7 @@ public class AlunoController {
         }
 
         // AOS, resposta pelo json:
-        return ResponseEntity.ok().body(alunoAssembler.toModel(alunoService.salvar(aluno)));
+        return ResponseEntity.ok().body(alunoAssembler.toModel(alunoService.atualizar(id ,aluno)));
     }
 
     @DeleteMapping("/{id}")

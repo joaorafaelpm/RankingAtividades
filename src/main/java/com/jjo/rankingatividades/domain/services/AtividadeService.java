@@ -1,10 +1,10 @@
 package com.jjo.rankingatividades.domain.services;
 
-import com.jjo.rankingatividades.domain.exceptions.AtividadesException;
+import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
+import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.models.Atividade;
 import com.jjo.rankingatividades.domain.models.Status;
-import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
 import com.jjo.rankingatividades.domain.repositories.AtividadeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,18 +21,34 @@ public class AtividadeService {
 
     @Transactional
     public Atividade procurarPeloId (Long id) {
-        return atividadeRepository.findById(id).orElseThrow(()-> new AtividadesException("Aluno não encontrado!"));
+        return atividadeRepository.findById(id).orElseThrow(()-> new NotFoundException("Atividade não encontrada!"));
     }
 
     @Transactional
     public Atividade salvar (Atividade atividade) {
+        return atividadeRepository.save(atividade);
+    }
+
+    @Transactional
+    public Atividade addAtividade (Atividade atividade) {
         Aluno aluno = alunoService.procurarPorAtividade(atividade);
         atividade.setStatus(Status.PENDENTE);
         atividade.setDataInicio(OffsetDateTime.now());
         atividade.setDataFim(null);
-        aluno.adicionarAtividade(atividade);
+        aluno.adicionarAtividadeAluno(atividade);
         return atividadeRepository.save(atividade);
     }
 
+    @Transactional
+    public Atividade atualizarAtividade (Long id ,String description) {
+        Atividade atividadeAtualizada = procurarPeloId(id) ;
+        atividadeAtualizada.setDescricao(description);
+        return atividadeRepository.save(atividadeAtualizada);
+    }
+
+    @Transactional
+    public void deletar (Long id) {
+        atividadeRepository.deleteById(id);
+    }
 
 }

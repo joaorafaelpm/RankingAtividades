@@ -44,6 +44,7 @@ public class Atividade {
 
 
     public Atividade(Long alunoId, String descricao ) {
+        this.aluno = aluno;
         this.descricao = descricao ;
     }
     public Atividade(String descricao , Aluno aluno) {

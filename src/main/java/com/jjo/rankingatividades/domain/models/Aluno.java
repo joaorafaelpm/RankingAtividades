@@ -42,7 +42,7 @@ public class Aluno extends Usuario{
         this.classe = classe;
     }
 
-    public void adicionarAtividade(Atividade atividade ) {
+    public void adicionarAtividadeAluno(Atividade atividade ) {
         atividades.add(atividade);
         atividade.setAluno(this);
     }
