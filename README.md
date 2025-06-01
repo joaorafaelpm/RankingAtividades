@@ -40,13 +40,13 @@ Cria um novo aluno.
 
 #### 🧾 Tabela de Campos
 
-| Campo      | Tipo     | Obrigatório | Descrição                              |
-|------------|----------|-------------|----------------------------------------|
-| `name`  | `String` | Sim         | Nome do aluno.         |
-| `email`  | `String` | Sim         | Email do aluno.         |
-| `dataNascimento`  | `OffsetDateTime (YYYY-MM-DDTHH:MM:SSZ)` | Sim         | Data de nascimento do aluno.         |
-| `curso`  | `String` | Sim         | Curso do aluno.         |
-| `classe`  | `String` | Sim         | Classe do aluno.         |
+| Campo              | Tipo                     | Obrigatório | Descrição                    |
+|--------------------|--------------------------|-------------|------------------------------|
+| `name`             | `String`                 | Sim         | Nome do aluno.               |
+| `email`            | `String`                 | Sim         | Email do aluno.              |
+| `dataNascimento`   | `(YYYY-MM-DDTHH:MM:SSZ)` | Sim         | Data de nascimento do aluno. |
+| `curso`            | `String`                 | Sim         | Curso do aluno.              |
+| `classe`           | `String`                 | Sim         | Classe do aluno.             |
 
 ---
 ````
@@ -69,14 +69,13 @@ Atualiza os dados de um aluno existente.
 
 #### 🧾 Tabela de Campos
 
-| Campo      | Tipo     | Obrigatório | Descrição                              |
-|------------|----------|-------------|----------------------------------------|
-| `name`  | `String` | Sim         | Nome do aluno.         |
-| `email`  | `String` | Sim         | Email do aluno.         |
-| `dataNascimento`  | `OffsetDateTime (YYYY-MM-DDTHH:MM:SSZ)` | Sim         | Data de nascimento do aluno.         |
-| `curso`  | `String` | Sim         | Curso do aluno.         |
-| `classe`  | `String` | Sim         | Classe do aluno.         |
-
+| Campo              | Tipo                     | Obrigatório | Descrição                    |
+|--------------------|--------------------------|-------------|------------------------------|
+| `name`             | `String`                 | Sim         | Nome do aluno.               |
+| `email`            | `String`                 | Sim         | Email do aluno.              |
+| `dataNascimento`   | `(YYYY-MM-DDTHH:MM:SSZ)` | Sim         | Data de nascimento do aluno. |
+| `curso`            | `String`                 | Sim         | Curso do aluno.              |
+| `classe`           | `String`                 | Sim         | Classe do aluno.             |
 ---
 ````
 #### ❌ DELETE `/alunos/{id}`
