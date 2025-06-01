@@ -29,11 +29,11 @@ Cria um novo aluno.
 **Body (JSON):**
 ```json
 {
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "dataNascimento": "2005-08-15T00:00:00Z",
+  "name": "João Rafael",
+  "email": "jrfifipi@gmail.com",
+  "dataNascimento": "2009-01-07T00:00:00Z",
   "curso": "Informática",
-  "classe": "3B"
+  "classe": "2B"
 }
 ```
 ```
@@ -58,11 +58,11 @@ Atualiza os dados de um aluno existente.
 **Body (JSON):**
 ```json
 {
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "dataNascimento": "2005-08-15T00:00:00Z",
+  "name": "João Rafael",
+  "email": "jrfifipi@gmail.com",
+  "dataNascimento": "2009-01-07T00:00:00Z",
   "curso": "Informática",
-  "classe": "3B"
+  "classe": "2B"
 }
 ```
 ```
@@ -100,7 +100,7 @@ Cria uma nova atividade vinculada a um aluno.
   "alunoId": {
     "id": 1
   },
-  "descricao": "Participação na feira de ciência"
+  "descricao": "Curso de informática, Bento Quirino."
 }
 ```
 ```
