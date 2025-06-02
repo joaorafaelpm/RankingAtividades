@@ -5,7 +5,6 @@ import com.jjo.rankingatividades.domain.models.Atividade;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import com.jjo.rankingatividades.assemblers.AlunoAssembler;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
 import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
@@ -19,7 +18,6 @@ import java.util.List;
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
-    private final AlunoAssembler alunoAssembler;
 
     @Transactional
     public Aluno procurarPeloId (Long id) {

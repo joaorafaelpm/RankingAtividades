@@ -7,7 +7,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,13 +54,14 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 //      TODO : Fazer o exceptionHandler desta exceção, ela cuida de elementos que não podem ser nulos, porém não são do tipo MethodArgumentNotValidException
 
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public ProblemDetail handleOffsetDateTimeException (HttpMessageNotReadableException e) {
-//        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-//        problemDetail.setTitle("A data foi escrita de forma incorreta, o padrão usado é (yyyy/mm/ddThh:mm:ssZ");
-//        problemDetail.setType(URI.create("https://rankingatividades/erros/erro-requisicao"));
-//
-//        return problemDetail ;
+//    public ResponseEntity<Problem> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
+//        InEnum in = InEnum.BODY;
+//        String detail = exception.getMessage();
+//        return ProblemMediaType.INSTANCE
+//                .toResponse(new BadRequestProblem(InputValidationIssues.schemaViolation(in, null, null,
+//                        detail)));
 //    }
+
 
     @ExceptionHandler(AlunoEAtividadeException.class)
     public ProblemDetail handleNegocioAtividade (AlunoEAtividadeException e) {

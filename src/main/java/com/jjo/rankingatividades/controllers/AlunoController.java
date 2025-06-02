@@ -3,8 +3,10 @@ package com.jjo.rankingatividades.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jjo.rankingatividades.assemblers.AlunoMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jjo.rankingatividades.domain.DTOs.AlunoDTO;
-import com.jjo.rankingatividades.assemblers.AlunoAssembler;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
 import com.jjo.rankingatividades.domain.services.AlunoService;
@@ -31,7 +32,7 @@ import com.jjo.rankingatividades.models.AlunoRepresentation;
 public class AlunoController {
 
     private final AlunoService alunoService ;
-    private final AlunoAssembler alunoAssembler;
+    private final AlunoMapper alunoMapper ;
     private final AlunoRepository alunoRepository;
     private final List<Aluno> listaAlunos = new ArrayList<>();
 
@@ -39,7 +40,7 @@ public class AlunoController {
     @GetMapping
     public ResponseEntity<List<AlunoRepresentation>> pegarAlunos() {
         List<Aluno> alunos = alunoRepository.findAll();
-        List<AlunoRepresentation> lista = alunoAssembler.toCollection(alunos);
+        List<AlunoRepresentation> lista = alunoMapper.toCollection(alunos);
         // POO, sem http:
         for (Aluno aluno : listaAlunos) {
             System.out.println(aluno.toString());
@@ -51,7 +52,7 @@ public class AlunoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AlunoRepresentation> pegarAluno(@PathVariable Long id) {
-        AlunoRepresentation aluno = alunoAssembler.toModel(alunoService.procurarPeloId(id));
+        AlunoRepresentation aluno = alunoMapper.alunoToAlunoRepresentation(alunoService.procurarPeloId(id));
         // POO, sem http:
         for (Aluno alunoLista : listaAlunos) {
             if (aluno.getId() == id) {
@@ -60,7 +61,7 @@ public class AlunoController {
         }
         // AOS, resposta pelo json:
         return alunoRepository.findById(id)
-                .map(alunoAssembler :: toModel)
+                .map(alunoMapper :: alunoToAlunoRepresentation )
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -68,17 +69,17 @@ public class AlunoController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public AlunoRepresentation criarAluno(@Valid @RequestBody AlunoDTO alunoDTO) {
-        Aluno aluno = alunoAssembler.toEntity(alunoDTO);
+        Aluno aluno = alunoMapper.alunoDTOToAluno(alunoDTO);
         // POO, sem http:
         listaAlunos.add(aluno);
         // AOS, resposta pelo json:
-        return alunoAssembler.toModel(alunoService.salvar(aluno));
+        return alunoMapper.alunoToAlunoRepresentation(alunoService.salvar(aluno));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AlunoRepresentation> atualizarAluno
     (@PathVariable Long id , @Valid @RequestBody AlunoDTO alunoDTO) {
-        Aluno aluno = alunoAssembler.toEntity(alunoDTO);
+        Aluno aluno = alunoMapper.alunoDTOToAluno(alunoDTO);
         // POO, sem http:
         aluno.setId(id);
         for (Aluno alunoAntigo : listaAlunos) {
@@ -90,7 +91,7 @@ public class AlunoController {
         }
 
         // AOS, resposta pelo json:
-        return ResponseEntity.ok().body(alunoAssembler.toModel(alunoService.atualizar(id ,aluno)));
+        return ResponseEntity.ok().body(alunoMapper.alunoToAlunoRepresentation(alunoService.atualizar(id ,aluno)));
     }
 
     @DeleteMapping("/{id}")
