@@ -5,19 +5,13 @@ import java.time.OffsetDateTime;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter
-@Setter
+@Data
 @Table(name="atividades")
 @NoArgsConstructor
 public class Atividade {
@@ -56,15 +50,4 @@ public class Atividade {
         this.dataFim = null;
     }
 
-    @Override
-    public String toString() {
-        return "Atividade{" +
-                "id=" + id +
-                ", aluno=" + aluno +
-                ", descricao='" + descricao + '\'' +
-                ", dataInicio=" + dataInicio +
-                ", status=" + status +
-                ", dataFim=" + dataFim +
-                '}';
-    }
 }

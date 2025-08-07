@@ -1,4 +1,4 @@
-package com.jjo.rankingatividades.config;
+package com.jjo.rankingatividades.infrastructure.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

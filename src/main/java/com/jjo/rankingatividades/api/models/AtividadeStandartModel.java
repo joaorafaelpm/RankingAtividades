@@ -1,17 +1,13 @@
-package com.jjo.rankingatividades.models;
+package com.jjo.rankingatividades.api.models;
 
 import com.jjo.rankingatividades.domain.models.Status;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class AtividadeStandartModel {
 
     private Long id ;

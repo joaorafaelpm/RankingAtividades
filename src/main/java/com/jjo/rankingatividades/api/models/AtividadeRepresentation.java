@@ -1,18 +1,15 @@
-package com.jjo.rankingatividades.models;
+package com.jjo.rankingatividades.api.models;
 
 import java.time.OffsetDateTime;
 
-import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.models.Status;
 
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class AtividadeRepresentation {
 

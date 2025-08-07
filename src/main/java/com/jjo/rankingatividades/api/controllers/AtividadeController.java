@@ -1,9 +1,9 @@
-package com.jjo.rankingatividades.controllers;
+package com.jjo.rankingatividades.api.controllers;
 
 import java.util.List;
 
-import com.jjo.rankingatividades.assemblers.AtividadeAssembler;
-import com.jjo.rankingatividades.assemblers.AtividadeMapper;
+import com.jjo.rankingatividades.api.assemblers.AtividadeAssembler;
+import com.jjo.rankingatividades.api.assemblers.AtividadeMapper;
 import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
 import com.jjo.rankingatividades.domain.DTOs.DescriptionDTO;
 import com.jjo.rankingatividades.domain.services.AtividadeService;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.jjo.rankingatividades.domain.models.Atividade;
 import com.jjo.rankingatividades.domain.repositories.AtividadeRepository;
-import com.jjo.rankingatividades.models.AtividadeRepresentation;
+import com.jjo.rankingatividades.api.models.AtividadeRepresentation;
 
 import lombok.AllArgsConstructor;
 

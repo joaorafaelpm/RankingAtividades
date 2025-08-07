@@ -1,15 +1,10 @@
-package com.jjo.rankingatividades.assemblers;
-
-import java.util.List;
+package com.jjo.rankingatividades.api.assemblers;
 
 import com.jjo.rankingatividades.domain.models.Aluno;
-import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
 import com.jjo.rankingatividades.domain.services.AlunoService;
-import org.modelmapper.ModelMapper;
 
 import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
 import com.jjo.rankingatividades.domain.models.Atividade;
-import com.jjo.rankingatividades.models.AtividadeRepresentation;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

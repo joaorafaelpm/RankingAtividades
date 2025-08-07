@@ -15,24 +15,21 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
 
-    @Transactional
+
     public Aluno procurarPeloId (Long id) {
         return alunoRepository.findById(id).orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
     }
 
-    @Transactional
     public Aluno procurarPorAtividade (Atividade atividade) {
         return alunoRepository.findById(atividade.getAluno().getId())
                 .orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
     }
 
-
-
-    @Transactional
     public Aluno salvar(Aluno aluno) {
         if (emailEmUso(aluno)) {
             throw new AlunoEAtividadeException("Email já está em uso!");
@@ -40,7 +37,7 @@ public class AlunoService {
 
         return alunoRepository.save(aluno);
     }
-    @Transactional
+
     public Aluno atualizar(Long id , Aluno aluno ) {
         List<Atividade> atividades = procurarPeloId(id).getAtividades();
         aluno.setAtividades(atividades);
@@ -52,18 +49,13 @@ public class AlunoService {
             }
             throw new AlunoEAtividadeException("Email já está em uso!");
         }
-
-
         return alunoRepository.save(aluno);
     }
 
-    @Transactional
     public boolean emailEmUso (Aluno aluno) {
         return alunoRepository.findByEmail(aluno.getEmail()).isPresent();
     }
 
-
-    @Transactional
     public void deletar (Long alunoId) {
         alunoRepository.deleteById(alunoId);
     }

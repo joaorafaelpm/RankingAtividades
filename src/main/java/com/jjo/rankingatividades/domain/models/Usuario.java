@@ -48,6 +48,7 @@ public abstract class Usuario {
         this.dataNascimento = dataNascimento;
         this.atividades = new ArrayList<>();
     }
+
     public Usuario(Long id, String name , String email, OffsetDateTime dataNascimento) {
         this.id = id;
         this.name = name;

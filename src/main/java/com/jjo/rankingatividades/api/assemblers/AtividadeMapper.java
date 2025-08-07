@@ -1,11 +1,8 @@
-package com.jjo.rankingatividades.assemblers;
+package com.jjo.rankingatividades.api.assemblers;
 
-import com.jjo.rankingatividades.domain.DTOs.AlunoDTO;
 import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
-import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.models.Atividade;
-import com.jjo.rankingatividades.models.AlunoRepresentation;
-import com.jjo.rankingatividades.models.AtividadeRepresentation;
+import com.jjo.rankingatividades.api.models.AtividadeRepresentation;
 import org.mapstruct.Mapper;
 import org.springframework.context.annotation.Bean;
 

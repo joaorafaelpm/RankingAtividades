@@ -1,4 +1,4 @@
-package com.jjo.rankingatividades.controllers;
+package com.jjo.rankingatividades.api.controllers;
 
 import com.jjo.rankingatividades.domain.models.Atividade;
 import com.jjo.rankingatividades.domain.services.AtividadeService;

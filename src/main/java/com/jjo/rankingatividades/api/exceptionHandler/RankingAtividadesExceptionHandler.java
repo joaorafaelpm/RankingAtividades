@@ -1,4 +1,4 @@
-package com.jjo.rankingatividades.exceptionHandler;
+package com.jjo.rankingatividades.api.exceptionHandler;
 
 import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
 import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,12 +55,9 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 //      TODO : Fazer o exceptionHandler desta exceção, ela cuida de elementos que não podem ser nulos, porém não são do tipo MethodArgumentNotValidException
 
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public ResponseEntity<Problem> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
-//        InEnum in = InEnum.BODY;
-//        String detail = exception.getMessage();
-//        return ProblemMediaType.INSTANCE
-//                .toResponse(new BadRequestProblem(InputValidationIssues.schemaViolation(in, null, null,
-//                        detail)));
+//    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+//        String errorMessage = "Erro de validação em algum capo do Objeto!";
+//        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 //    }
 
 
