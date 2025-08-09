@@ -1,13 +1,12 @@
 package com.jjo.rankingatividades.api.exceptionHandler;
 
-import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
+import com.jjo.rankingatividades.domain.exceptions.EmailEmUsoException;
 import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,15 +42,6 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
         return this.handleExceptionInternal(ex, problemDetail , headers, status, request);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ProblemDetail handleDataIntegrityValidation (DataIntegrityViolationException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        problemDetail.setTitle("Algum dado foi inserido de forma incorreta!");
-        problemDetail.setType(URI.create("https://rankingatividades/erros/conflitos-em-recursos"));
-
-        return problemDetail ;
-    }
-
 //      TODO : Fazer o exceptionHandler desta exceção, ela cuida de elementos que não podem ser nulos, porém não são do tipo MethodArgumentNotValidException
 
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -61,8 +51,8 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 //    }
 
 
-    @ExceptionHandler(AlunoEAtividadeException.class)
-    public ProblemDetail handleNegocioAtividade (AlunoEAtividadeException e) {
+    @ExceptionHandler(EmailEmUsoException.class)
+    public ProblemDetail handleNegocioAtividade (EmailEmUsoException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create("https://rankingatividades/erros/regra-de-negocio"));
         problemDetail.setTitle(e.getMessage());

@@ -1,18 +1,29 @@
 package com.jjo.rankingatividades.domain.services;
 
+import com.jjo.rankingatividades.domain.exceptions.AnoNascimentoException;
 import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import com.jjo.rankingatividades.domain.models.Atividade;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.core.Local;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
-import com.jjo.rankingatividades.domain.exceptions.AlunoEAtividadeException;
+import com.jjo.rankingatividades.domain.exceptions.EmailEmUsoException;
 
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 @Transactional
@@ -20,44 +31,76 @@ public class AlunoService {
 
     private final AlunoRepository alunoRepository;
 
-
-    public Aluno procurarPeloId (Long id) {
-        return alunoRepository.findById(id).orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
+    public List<Aluno> findAll() {
+        return alunoRepository.findAll();
     }
 
-    public Aluno procurarPorAtividade (Atividade atividade) {
+    public Aluno findById(Long id) {
+        return alunoRepository.findById(id).orElseThrow(
+                ()-> new NotFoundException("Aluno não encontrado!")
+        );
+    }
+
+    public Aluno findByAtividade(Atividade atividade) {
         return alunoRepository.findById(atividade.getAluno().getId())
                 .orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
     }
 
-    public Aluno salvar(Aluno aluno) {
-        if (emailEmUso(aluno)) {
-            throw new AlunoEAtividadeException("Email já está em uso!");
-        }
-
-        return alunoRepository.save(aluno);
-    }
-
-    public Aluno atualizar(Long id , Aluno aluno ) {
-        List<Atividade> atividades = procurarPeloId(id).getAtividades();
-        aluno.setAtividades(atividades);
-
-        if (emailEmUso(aluno)) {
-            Aluno alunoDoEmail = alunoRepository.findByEmail(aluno.getEmail()).orElseThrow() ;
-            if (aluno.getId() == alunoDoEmail.getId()) {
-                return alunoRepository.save(aluno);
+    public Aluno add(Aluno aluno) {
+        try {
+            verifyAge(aluno.getDataNascimento());
+            if (emailExiste(aluno)) {
+                throw new EmailEmUsoException("Email já está em uso!");
             }
-            throw new AlunoEAtividadeException("Email já está em uso!");
+            return alunoRepository.saveAndFlush(aluno);
         }
-        return alunoRepository.save(aluno);
+        catch (AnoNascimentoException e) {
+            throw new AnoNascimentoException(e.getMessage());
+        }
+
     }
 
-    public boolean emailEmUso (Aluno aluno) {
+    public Aluno save(Long id , Aluno aluno ) {
+        Aluno alunoExistente = findById(id);
+
+        if (aluno.getName() != null && !aluno.getName().equals(alunoExistente.getName())) {
+            alunoExistente.setName(aluno.getName());
+        }
+        if (aluno.getDataNascimento() != null && !aluno.getDataNascimento().equals(alunoExistente.getDataNascimento())) {
+            alunoExistente.setDataNascimento(aluno.getDataNascimento());
+        }
+        if (aluno.getEmail() != null && !aluno.getEmail().equals(alunoExistente.getEmail())) {
+            if (emailExiste(aluno)) {
+                Aluno alunoDoEmail = alunoRepository.findByEmail(aluno.getEmail()).orElseThrow();
+                if (!alunoExistente.getId().equals(alunoDoEmail.getId())) {
+                    throw new EmailEmUsoException("Email já está em uso!");
+                }
+            }
+            alunoExistente.setEmail(aluno.getEmail());
+        }
+
+        alunoExistente.setId(id);
+        return alunoRepository.save(alunoExistente);
+
+    }
+
+    public boolean emailExiste (Aluno aluno) {
         return alunoRepository.findByEmail(aluno.getEmail()).isPresent();
     }
 
-    public void deletar (Long alunoId) {
-        alunoRepository.deleteById(alunoId);
+    public void verifyAge(LocalDate dataNascimento) {
+        int idade = Period.between(dataNascimento, LocalDate.now()).getYears();
+        if (idade < 13) {
+            throw new AnoNascimentoException("O aluno deve ter pelo menos 13 anos!");
+        }
+    }
+
+    public ResponseEntity<?> deleteById(Long alunoId) {
+        if (alunoRepository.findById(alunoId).isPresent()) {
+            alunoRepository.deleteById(alunoId);
+            return ResponseEntity.noContent().build();
+        }
+        throw new NotFoundException("Aluno não encontrado!");
     }
 
 

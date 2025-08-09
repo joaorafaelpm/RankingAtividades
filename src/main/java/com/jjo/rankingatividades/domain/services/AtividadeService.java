@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -19,30 +19,33 @@ public class AtividadeService {
     private final AtividadeRepository atividadeRepository;
     private final AlunoService alunoService ;
 
-    public Atividade procurarPeloId (Long id) {
+    public List<Atividade> findAll () {
+        return atividadeRepository.findAll();
+    }
+
+    public Atividade findById(Long id) {
         return atividadeRepository.findById(id).orElseThrow(()-> new NotFoundException("Atividade não encontrada!"));
     }
 
-    public Atividade salvar (Atividade atividade) {
+    public Atividade save(Atividade atividade) {
         return atividadeRepository.save(atividade);
     }
 
     public Atividade addAtividade (Atividade atividade) {
-        Aluno aluno = alunoService.procurarPorAtividade(atividade);
+        Aluno aluno = alunoService.findByAtividade(atividade);
         atividade.setStatus(Status.PENDENTE);
-        atividade.setDataInicio(OffsetDateTime.now());
         atividade.setDataFim(null);
         aluno.adicionarAtividadeAluno(atividade);
         return atividadeRepository.save(atividade);
     }
 
     public Atividade atualizarAtividade (Long id ,String description) {
-        Atividade atividadeAtualizada = procurarPeloId(id) ;
+        Atividade atividadeAtualizada = findById(id) ;
         atividadeAtualizada.setDescricao(description);
         return atividadeRepository.save(atividadeAtualizada);
     }
 
-    public void deletar (Long id) {
+    public void deleteById(Long id) {
         atividadeRepository.deleteById(id);
     }
 

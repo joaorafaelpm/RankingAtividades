@@ -1,13 +1,17 @@
 package com.jjo.rankingatividades.domain.models;
 
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -27,27 +31,21 @@ public class Atividade {
     @JoinColumn(name="id_aluno")
     private Aluno aluno ;
 
-    private String descricao ;
-    @Column(name = "data_inicio")
-    private OffsetDateTime dataInicio;
     @Enumerated(EnumType.STRING)
     private Status status ;
-    @Column(name = "data_fim")
-    private OffsetDateTime dataFim;
+
+    private String descricao ;
+
+    @Column(name = "data_inicio", columnDefinition = "datetime", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @CreationTimestamp
+    private LocalDate dataInicio;
+
+    @Column(name = "data_fim" , columnDefinition = "datetime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dataFim;
 
 
 
-    public Atividade(Long alunoId, String descricao ) {
-        this.aluno = aluno;
-        this.descricao = descricao ;
-    }
-    public Atividade(String descricao , Aluno aluno) {
-        this.id = id;
-        this.aluno = aluno;
-        this.descricao = descricao ;
-        this.dataInicio = OffsetDateTime.now();
-        this.status = Status.PENDENTE;
-        this.dataFim = null;
-    }
 
 }

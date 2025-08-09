@@ -17,14 +17,14 @@ public class StatusController {
     private final StatusService statusService;
     @PutMapping
     public ResponseEntity<Atividade> atividadeFinalizada (@PathVariable Long id) {
-        Atividade atividade = atividadeService.procurarPeloId(id);
+        Atividade atividade = atividadeService.findById(id);
         statusService.finalizarAtividade(atividade);
         return ResponseEntity.noContent().build() ;
     }
 
     @DeleteMapping
     public ResponseEntity<Atividade> atividadePendente (@PathVariable Long id) {
-        Atividade atividade = atividadeService.procurarPeloId(id);
+        Atividade atividade = atividadeService.findById(id);
         statusService.atividadePendente(atividade);
         return ResponseEntity.noContent().build() ;
     }
