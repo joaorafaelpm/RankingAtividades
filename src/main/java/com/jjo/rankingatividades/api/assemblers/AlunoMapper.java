@@ -7,6 +7,8 @@ import com.jjo.rankingatividades.domain.DTOs.AlunoDTO;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import org.mapstruct.Mapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 
 import java.util.List;
 
@@ -25,6 +27,15 @@ public interface AlunoMapper {
 
     @Bean
     List<AlunoPagableRepresentation> toCollection(List<Aluno> listaAluno);
+
+    @Bean
+    AlunoPagableRepresentation toRepresentation(Aluno aluno);
+
+    default Page<AlunoPagableRepresentation> toModel(Page<Aluno> listaAluno) {
+        return listaAluno.map(this::toRepresentation);
+    }
+
+
 
 
 

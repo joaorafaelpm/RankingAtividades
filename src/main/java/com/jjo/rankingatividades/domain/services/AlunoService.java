@@ -4,12 +4,16 @@ import com.jjo.rankingatividades.domain.exceptions.AnoNascimentoException;
 import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import com.jjo.rankingatividades.domain.models.Atividade;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.core.Local;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.web.*;
+import org.springframework.http.ResponseEntity;
 
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
@@ -18,9 +22,7 @@ import com.jjo.rankingatividades.domain.exceptions.EmailEmUsoException;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -31,19 +33,23 @@ public class AlunoService {
 
     private final AlunoRepository alunoRepository;
 
-    public List<Aluno> findAll() {
+    public Page<Aluno> getAlunosPaginated(Pageable pageable) {
+        return alunoRepository.findAll(pageable);
+    }
+
+
+    public List<?> findAll() {
         return alunoRepository.findAll();
     }
 
     public Aluno findById(Long id) {
         return alunoRepository.findById(id).orElseThrow(
-                ()-> new NotFoundException("Aluno não encontrado!")
-        );
+                () -> new NotFoundException("Aluno não encontrado!"));
     }
 
     public Aluno findByAtividade(Atividade atividade) {
         return alunoRepository.findById(atividade.getAluno().getId())
-                .orElseThrow(()-> new NotFoundException("Aluno não encontrado!"));
+                .orElseThrow(() -> new NotFoundException("Aluno não encontrado!"));
     }
 
     public Aluno add(Aluno aluno) {
@@ -53,20 +59,20 @@ public class AlunoService {
                 throw new EmailEmUsoException("Email já está em uso!");
             }
             return alunoRepository.saveAndFlush(aluno);
-        }
-        catch (AnoNascimentoException e) {
+        } catch (AnoNascimentoException e) {
             throw new AnoNascimentoException(e.getMessage());
         }
 
     }
 
-    public Aluno save(Long id , Aluno aluno ) {
+    public Aluno save(Long id, Aluno aluno) {
         Aluno alunoExistente = findById(id);
 
         if (aluno.getName() != null && !aluno.getName().equals(alunoExistente.getName())) {
             alunoExistente.setName(aluno.getName());
         }
-        if (aluno.getDataNascimento() != null && !aluno.getDataNascimento().equals(alunoExistente.getDataNascimento())) {
+        if (aluno.getDataNascimento() != null
+                && !aluno.getDataNascimento().equals(alunoExistente.getDataNascimento())) {
             alunoExistente.setDataNascimento(aluno.getDataNascimento());
         }
         if (aluno.getEmail() != null && !aluno.getEmail().equals(alunoExistente.getEmail())) {
@@ -84,7 +90,7 @@ public class AlunoService {
 
     }
 
-    public boolean emailExiste (Aluno aluno) {
+    public boolean emailExiste(Aluno aluno) {
         return alunoRepository.findByEmail(aluno.getEmail()).isPresent();
     }
 
@@ -102,7 +108,5 @@ public class AlunoService {
         }
         throw new NotFoundException("Aluno não encontrado!");
     }
-
-
 
 }
