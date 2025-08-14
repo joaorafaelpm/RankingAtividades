@@ -1,14 +1,12 @@
 package com.jjo.rankingatividades.domain.repositories;
 
-import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jjo.rankingatividades.domain.models.Atividade;
+import org.springframework.stereotype.Repository;
 
+@Repository // Isso indica que essa interface é um repositório do JPA
 public interface AtividadeRepository extends JpaRepository<Atividade, Long>{
-    
-    Optional<List<Atividade>> findByAlunoId (Long alunoId);
-
 }

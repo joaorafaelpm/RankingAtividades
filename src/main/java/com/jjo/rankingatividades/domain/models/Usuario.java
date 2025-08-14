@@ -1,10 +1,8 @@
 package com.jjo.rankingatividades.domain.models;
 
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -12,55 +10,52 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+/**
+ * Classe abstrata que serve como base para todas as entidades que representam usuários no sistema.
+ *
+ * Possui atributos comuns como ID, nome, e-mail e data de nascimento.
+ * Mantém também a relação com as atividades do usuário.
+ */
 @MappedSuperclass
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class Usuario {
 
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    protected Long id ;
-
-    // TODO: Continuar com verificações no email, nome e data de nascimento. Mesmo que eu já tenha uma classe de validações, creio que também seja necesário anotações do JPA validation
+    protected Long id;
 
     @NotBlank
-    protected String name ;
+    protected String name;
 
     @NotBlank
     @Email
-    protected String email ;
+    protected String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    protected LocalDate dataNascimento ;
+    protected LocalDate dataNascimento;
 
-    //    mappedBy indica que é o elemento "aluno" que faz essa relação, afinal um aluno pode ter várias atividades (ManyToOne) porém somente UM aluno pode ter essas atividades (OneToMany). O padrão é "aluno"
-    //    cascade = "CascadeType.ALL" indica que toda mudança que ocorrer dentro dessa lista deve ser sincronizada com a mudança no banco de dados, uma vez que, quando modificada a lista de autuações adicionando uma nova, nós usamos uma função da classe de aluno, e não incluimos nada sobre a entidade de Atividades, ou seja, o Jakarta não sabe onde mudar. Quando adicionamos essa anotação ele entende que assim que houver mudança, ele deve sincronizar com a tabela ligada à Classe original de Atividades.
-    @OneToMany(mappedBy = "aluno" , cascade = CascadeType.ALL ,orphanRemoval = true)
+    /**
+     * Lista de atividades associadas ao usuário.
+     * mappedBy = "aluno" indica que a relação é mapeada pelo atributo "aluno" em {@link Atividade}.
+     * cascade = CascadeType.ALL garante que mudanças sejam propagadas para as atividades.
+     * orphanRemoval = true remove atividades órfãs automaticamente.
+     */
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<Atividade> atividades = new ArrayList<>();
 
-    public Usuario(String name , String email, LocalDate dataNascimento) {
+    public Usuario(String name, String email, LocalDate dataNascimento) {
         this.name = name;
         this.email = email;
         this.dataNascimento = dataNascimento;
-        this.atividades = new ArrayList<>();
     }
 
-    public Usuario(Long id, String name , String email, LocalDate dataNascimento) {
+    public Usuario(Long id, String name, String email, LocalDate dataNascimento) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.dataNascimento = dataNascimento;
-        this.atividades = new ArrayList<>();
     }
-
-
-    
-    
-
-    
-
-
 }

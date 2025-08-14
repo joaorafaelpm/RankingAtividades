@@ -8,27 +8,38 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Data;
 
+/**
+ * Entidade que representa um aluno no sistema.
+ *
+ * Extende a classe abstrata {@link Usuario}, herdando atributos comuns como nome, e-mail e data de nascimento.
+ *
+ * O aluno também possui informações acadêmicas (curso e classe)
+ * e pode estar associado a várias atividades.
+ */
 @Entity
 @Data
-@Table(name="alunos")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "alunos")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Herança no mesmo esquema de tabela
 @EqualsAndHashCode(callSuper = true)
-public class Aluno extends Usuario{
+public class Aluno extends Usuario {
 
-    @NotBlank
-    private String curso ;
-    
-    @NotBlank
-    private String classe ;
+    @NotBlank // Curso é obrigatório
+    private String curso;
 
-    public Aluno () {
+    @NotBlank // Classe é obrigatória
+    private String classe;
+
+    public Aluno() {
         super();
     }
 
-    public void adicionarAtividadeAluno(Atividade atividade ) {
+    /**
+     * Adiciona uma atividade ao aluno e mantém a relação bidirecional consistente.
+     *
+     * @param atividade Atividade a ser associada ao aluno
+     */
+    public void adicionarAtividadeAluno(Atividade atividade) {
         atividades.add(atividade);
         atividade.setAluno(this);
     }
-
-
 }
