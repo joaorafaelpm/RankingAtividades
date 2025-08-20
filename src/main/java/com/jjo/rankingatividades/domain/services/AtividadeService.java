@@ -7,6 +7,8 @@ import com.jjo.rankingatividades.domain.models.Status;
 import com.jjo.rankingatividades.domain.repositories.AtividadeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +32,10 @@ public class AtividadeService {
      * Retorna todas as atividades cadastradas no banco.
      * @return Lista de atividades.
      */
-    public List<Atividade> findAll() {
-        return atividadeRepository.findAll();
+    public Page<Atividade> getAtividadesPaginated(Pageable pageable) {
+        return atividadeRepository.findAll(pageable);
     }
+
 
     /**
      * Busca uma atividade pelo seu ID.

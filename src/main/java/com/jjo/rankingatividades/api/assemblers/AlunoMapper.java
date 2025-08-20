@@ -26,34 +26,39 @@ public interface AlunoMapper {
      * Converte um AlunoDTO para a entidade Aluno.
      * Usado normalmente no cadastro de um novo aluno.
      */
+    @Bean
     Aluno alunoDTOToAluno(AlunoDTO alunoDTO);
 
     /**
      * Converte um DTO de atualização (dados parciais) para a entidade Aluno.
      * Usado em requisições PUT/PATCH.
      */
+    @Bean
     Aluno alunoAtualizacaoDTOToAluno(AlunoAtualizacaoDTO alunoAtualizacaoDTO);
 
     /**
      * Converte um Aluno para uma representação única/detalhada (exibição completa no endpoint).
      */
+    @Bean
     AlunoUniqueRepresentation alunoToAlunoUniqueRepresentation(Aluno aluno);
 
     /**
      * Converte uma lista de Aluno para uma lista de representações pagináveis.
      */
+    @Bean
     List<AlunoPagableRepresentation> toCollection(List<Aluno> listaAluno);
 
     /**
      * Converte um único Aluno para a sua representação paginável.
      */
+    @Bean
     AlunoPagableRepresentation toRepresentation(Aluno aluno);
 
     /**
      * Converte uma página de Aluno para uma página de representações pagináveis.
      * Esse método é manual (default) porque o MapStruct não lida diretamente com Page<T>.
      */
-    default Page<AlunoPagableRepresentation> toModel(Page<Aluno> listaAluno) {
+    default Page<AlunoPagableRepresentation> toPageable(Page<Aluno> listaAluno) {
         return listaAluno.map(this::toRepresentation);
     }
 }

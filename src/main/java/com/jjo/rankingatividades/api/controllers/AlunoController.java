@@ -25,6 +25,8 @@ import com.jjo.rankingatividades.domain.DTOs.AlunoDTO;
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.services.AlunoService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/alunos") // Define a porta padrão para acessar as informações
 @AllArgsConstructor // Gera o construtor com todos os atributos
@@ -38,7 +40,17 @@ public class AlunoController {
     @GetMapping
     public PagedModel<?> pegarAlunos(@PageableDefault Pageable pageable) {
         // Chama o serviço para pegar alunos paginados e converte para representação
-        return new PagedModel<>(alunoMapper.toModel(alunoService.getAlunosPaginated(pageable)));
+        return new PagedModel<>(alunoMapper.toPageable(alunoService.getAlunosPaginated(pageable)));
+    }
+
+    @GetMapping("/by-name")
+    public List<?> pegarAlunos(String name) {
+        return alunoMapper.toCollection(alunoService.getAllByName(name));
+    }
+
+    @GetMapping("/by-name/pageable")
+    public List<?> pegarAlunos(int pageNumber , int pageSize ,String name) {
+        return alunoMapper.toCollection(alunoService.getAllByNamePageable(pageNumber , pageSize ,name));
     }
 
     // GET: busca um aluno específico pelo ID

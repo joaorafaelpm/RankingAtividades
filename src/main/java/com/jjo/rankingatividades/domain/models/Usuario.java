@@ -46,13 +46,13 @@ public abstract class Usuario {
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<Atividade> atividades = new ArrayList<>();
 
-    public Usuario(String name, String email, LocalDate dataNascimento) {
+    protected Usuario(String name, String email, LocalDate dataNascimento) {
         this.name = name;
         this.email = email;
         this.dataNascimento = dataNascimento;
     }
 
-    public Usuario(Long id, String name, String email, LocalDate dataNascimento) {
+    protected Usuario(Long id, String name, String email, LocalDate dataNascimento) {
         this.id = id;
         this.name = name;
         this.email = email;

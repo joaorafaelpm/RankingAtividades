@@ -1,10 +1,7 @@
 package com.jjo.rankingatividades.api.exceptionHandler;
 
 import com.jjo.rankingatividades.api.models.ErrorResponse;
-import com.jjo.rankingatividades.domain.exceptions.AtividadeException;
-import com.jjo.rankingatividades.domain.exceptions.AnoNascimentoException;
-import com.jjo.rankingatividades.domain.exceptions.EmailEmUsoException;
-import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
+import com.jjo.rankingatividades.domain.exceptions.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -48,94 +45,87 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
      * Aqui, além da mensagem genérica, adicionamos uma propriedade extra
      * ("camposComErro") contendo um mapa campo -> mensagem de erro.
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidationErrors(MethodArgumentNotValidException e) {
-        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problem.setTitle("Erro de validação");
-        problem.setDetail("Um ou mais campos estão inválidos.");
-        problem.setType(URI.create("https://rankingatividades/erros/validacao"));
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setTitle("Um ou mais itens inválidos");
+        problemDetail.setType(URI.create("https://rankingatividades/erros/invalid-components"));
 
-        // Monta um mapa com nome do campo e mensagem de erro associada
-        Map<String, String> fields = e.getBindingResult()
-                .getFieldErrors()
+
+        Map<String , String> fields = ex.getBindingResult().getAllErrors()
                 .stream()
-                .collect(Collectors.toMap(
-                        err -> err.getField(),
-                        err -> err.getDefaultMessage(),
-                        (existing, replacement) -> existing // mantém o primeiro erro encontrado para o campo
-                ));
+                .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField() ,
+                        objectError -> messageSource.getMessage(objectError , LocaleContextHolder.getLocale()))) ;
 
-        // Adiciona informações extras ao ProblemDetail
-        problem.setProperty("camposComErro", fields);
-        return problem;
+        problemDetail.setProperty("campos com erro" , fields);
+
+        return this.handleExceptionInternal(ex, problemDetail , headers, status, request);
     }
 
-    //      TODO : Fazer o exceptionHandler desta exceção, ela cuida de elementos que não podem ser nulos, porém não são do tipo MethodArgumentNotValidException
+//      TODO : Fazer o exceptionHandler desta exceção, ela cuida de elementos que não podem ser nulos, porém não são do tipo MethodArgumentNotValidException
+
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
-//    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+//    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable           (HttpMessageNotReadableException ex) {
 //        ErrorResponse error = new ErrorResponse("INVALID_FORMAT", "Formato de dados inválido no corpo da requisição");
 //        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 //    }
 
-    /**
-     * Trata EmailEmUsoException retornando ProblemDetail com status 400 (Bad Request).
-     * O type define um link para referência de regra de negócio.
-     */
+
     @ExceptionHandler(EmailEmUsoException.class)
-    public ProblemDetail handleEmailEmUso(EmailEmUsoException e) {
-//        Sempre que houver uma exceção de "EmailEmUsoException" eu atribuo o status de BAD_REQUEST e defino a mensagem como a menssagem da exception
+    public ProblemDetail handleEmailEmUso (EmailEmUsoException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create("https://rankingatividades/erros/regra-de-negocio"));
         problemDetail.setTitle(e.getMessage());
+
         return problemDetail;
     }
 
-    /**
-     * Trata NotFoundException retornando ProblemDetail com status 404 (Not Found).
-     */
+
     @ExceptionHandler(NotFoundException.class)
-    public ProblemDetail handleNaoEncontrado(NotFoundException e) {
-//        Sempre que houver uma exceção de "NotFoundException" eu atribuo o status de NOT_FOUND e defino a mensagem como a menssagem da exception
+    public ProblemDetail handleNaoEncontrado (NotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problemDetail.setType(URI.create("https://rankingatividades/erros/regra-de-negocio"));
         problemDetail.setTitle(e.getMessage());
+
+        return problemDetail;
+    }
+    @ExceptionHandler(NomeIncorretoException.class)
+    public ProblemDetail handleNomeIncorreto (NomeIncorretoException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setType(URI.create("https://rankingatividades/erros/regra-de-negocio"));
+        problemDetail.setTitle(e.getMessage());
+
         return problemDetail;
     }
 
-    /**
-     * Trata casos em que um recurso não foi encontrado (404).
-     * Exemplo: buscar uma atividade inexistente pelo ID.
-     */
+    @ExceptionHandler(AnoNascimentoException.class)
+    public ProblemDetail handleNomeIncorreto (AnoNascimentoException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setType(URI.create("https://rankingatividades/erros/regra-de-negocio"));
+        problemDetail.setTitle(e.getMessage());
+
+        return problemDetail;
+    }
+
     public ResponseEntity<ErrorResponse> handleNotFoundWithErrorResponse(NotFoundException e) {
         ErrorResponse error = new ErrorResponse("NOT_FOUND", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    /**
-     * Trata tentativas de cadastro ou acesso por usuários menores de 13 anos.
-     */
     public ResponseEntity<ErrorResponse> handleMenorDeTrezeWithErrorResponse(AnoNascimentoException e) {
         ErrorResponse error = new ErrorResponse("BAD_REQUEST", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+    public ResponseEntity<ErrorResponse> handleNumeroNoNome(NomeIncorretoException e) {
+        ErrorResponse error = new ErrorResponse("BAD_REQUEST", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 
-    /**
-     * Trata tentativas de cadastro com e-mail já existente no sistema.
-     */
     public ResponseEntity<ErrorResponse> handleEmailEmUsoWithErrorResponse(EmailEmUsoException e) {
         ErrorResponse error = new ErrorResponse("CONFLICT", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
-
-    /**
-     * Trata erros de negócio genéricos não classificados
-     * em outras exceções específicas.
-     */
-    public ResponseEntity<ErrorResponse> handleBusinessWithErrorResponse(AtividadeException e) {
-        ErrorResponse error = new ErrorResponse("BUSINESS_ERROR", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
     /**
      * Tratamento genérico para exceções não mapeadas.
      * Retorna 500 (Internal Server Error) com mensagem genérica para o cliente.

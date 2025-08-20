@@ -8,6 +8,9 @@ import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
 import com.jjo.rankingatividades.domain.DTOs.DescriptionDTO;
 import com.jjo.rankingatividades.domain.services.AtividadeService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +27,9 @@ public class AtividadeController {
 
     // GET: lista todas as atividades
     @GetMapping
-    public ResponseEntity<?> pegarAtividades() {
-        List<AtividadePagableRepresentation> atividades = atividadeMapper.toCollection(atividadeService.findAll());
-        return ResponseEntity.ok(atividades);
+    public PagedModel<?> pegarAlunos(@PageableDefault Pageable pageable) {
+        // Chama o serviço para pegar alunos paginados e converte para representação
+        return new PagedModel<>(atividadeMapper.toPageable(atividadeService.getAtividadesPaginated(pageable)));
     }
 
     // GET: busca uma atividade pelo ID

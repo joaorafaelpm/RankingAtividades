@@ -1,5 +1,6 @@
 package com.jjo.rankingatividades.api.assemblers;
 
+import com.jjo.rankingatividades.api.models.AlunoPagableRepresentation;
 import com.jjo.rankingatividades.api.models.AtividadeUniqueRepresentation;
 import com.jjo.rankingatividades.domain.DTOs.AtividadeDTO;
 import com.jjo.rankingatividades.domain.models.Aluno;
@@ -8,6 +9,7 @@ import com.jjo.rankingatividades.api.models.AtividadePagableRepresentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -25,17 +27,20 @@ public interface AtividadeMapper {
      * Converte um AtividadeDTO para a entidade Atividade.
      * O campo alunoId no DTO é convertido em um objeto Aluno via método auxiliar {@link #toAluno(Long)}.
      */
+    @Bean
     @Mapping(source = "alunoId", target = "aluno")
     Atividade atividadeDTOToAtividade(AtividadeDTO atividadeDTO);
 
     /**
      * Converte uma entidade Atividade para a representação detalhada.
      */
+    @Bean
     AtividadeUniqueRepresentation atividadeToAtividadeUniqueRepresentation(Atividade atividade);
 
     /**
      * Converte uma lista de Atividade para uma lista de representações pagináveis.
      */
+    @Bean
     List<AtividadePagableRepresentation> toCollection(List<Atividade> listaAtividades);
 
     /**
@@ -50,5 +55,15 @@ public interface AtividadeMapper {
         Aluno aluno = new Aluno();
         aluno.setId(alunoId);
         return aluno;
+    }
+
+    @Bean
+    AtividadePagableRepresentation toRepresentation(Atividade atividade);
+    /**
+     * Converte uma página de Atividade para uma página de representações pagináveis.
+     * Esse método é manual (default) porque o MapStruct não lida diretamente com Page<T>.
+     */
+    default Page<AtividadePagableRepresentation> toPageable(Page<Atividade> listaAtividade) {
+        return listaAtividade.map(this::toRepresentation);
     }
 }

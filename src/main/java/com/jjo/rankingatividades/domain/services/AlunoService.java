@@ -1,6 +1,7 @@
 package com.jjo.rankingatividades.domain.services;
 
 import com.jjo.rankingatividades.domain.exceptions.AnoNascimentoException;
+import com.jjo.rankingatividades.domain.exceptions.NomeIncorretoException;
 import com.jjo.rankingatividades.domain.exceptions.NotFoundException;
 import com.jjo.rankingatividades.domain.models.Atividade;
 import jakarta.transaction.Transactional;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.http.ResponseEntity;
 
 import com.jjo.rankingatividades.domain.models.Aluno;
 import com.jjo.rankingatividades.domain.repositories.AlunoRepository;
@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Slf4j // Cria um logger para facilitar o log de informações
 @Service // Indica que esta classe é um serviço do Spring
@@ -33,21 +34,38 @@ public class AlunoService {
         return alunoRepository.findAll(pageable);
     }
 
+    public List<Aluno> getAllByName(String name) {
+        return alunoRepository.findAllByName(name);
+    }
+    public List<Aluno> getAllByNamePageable(int pageNumber , int pageSize , String name) {
+        return alunoRepository.findAllByNamePageable(pageNumber , pageSize , name);
+    }
+
+
+
+
+
     // Busca um aluno pelo ID; lança exceção se não encontrado
     public Aluno findById(Long id) {
-        return alunoRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Aluno não encontrado!"));
+        return alunoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Aluno de id: '%d' não encontrado!" , id )
+                ));
     }
 
     // Busca um aluno com base na atividade (através do ID do aluno associado à atividade)
     public Aluno findByAtividade(Atividade atividade) {
-        return alunoRepository.findById(atividade.getAluno().getId())
-                .orElseThrow(() -> new NotFoundException("Aluno não encontrado!"));
+        Long id = atividade.getAluno().getId();
+        return alunoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Aluno de id: '%d' não encontrado!" , id )
+                ));
     }
 
     // Adiciona um novo aluno ao banco de dados
     public Aluno add(Aluno aluno) {
         verifyAge(aluno.getDataNascimento()); // Verifica se a idade é válida
+        verifyName(aluno.getName());
         if (emailExiste(aluno)) { // Verifica se o email já está em uso
             throw new EmailEmUsoException("Email já está em uso!");
         }
@@ -88,9 +106,23 @@ public class AlunoService {
         return alunoRepository.save(alunoExistente); // Salva as alterações
     }
 
+    // Deleta um aluno pelo ID. Retorna status 204 se sucesso, ou lança exceção se não encontrado
+    public void deleteById(Long alunoId) {
+        Aluno aluno = findById(alunoId);
+        alunoRepository.delete(aluno);
+    }
+
     // Verifica se o email já está cadastrado no banco
     public boolean emailExiste(Aluno aluno) {
         return alunoRepository.findByEmail(aluno.getEmail()).isPresent();
+    }
+
+    public void verifyName(String name) {
+        if (!name.matches("^[A-Za-zÀ-ÖØ-öø-ÿ ]+$")) {
+            throw new NomeIncorretoException(
+                    String.format("Nome foi inserido incorretamente: '%s' não deve ter números!" , name)
+            );
+        }
     }
 
     // Verifica se o aluno tem no mínimo 13 anos
@@ -102,13 +134,6 @@ public class AlunoService {
         }
     }
 
-    // Deleta um aluno pelo ID. Retorna status 204 se sucesso, ou lança exceção se não encontrado
-    public ResponseEntity<?> deleteById(Long alunoId) {
-        if (alunoRepository.findById(alunoId).isPresent()) {
-            alunoRepository.deleteById(alunoId);
-            return ResponseEntity.noContent().build(); // HTTP 204 - No Content
-        }
-        throw new NotFoundException("Aluno não encontrado!");
-    }
+
 
 }
