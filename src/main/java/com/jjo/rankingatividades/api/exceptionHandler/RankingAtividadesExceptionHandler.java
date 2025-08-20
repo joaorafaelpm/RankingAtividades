@@ -48,11 +48,14 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+//        Classe padrão para responder os erros
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setTitle("Um ou mais itens inválidos");
         problemDetail.setType(URI.create("https://rankingatividades/erros/invalid-components"));
 
 
+//        Pegando os campos com erro
         Map<String , String> fields = ex.getBindingResult().getAllErrors()
                 .stream()
                 .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField() ,
@@ -72,6 +75,11 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 //    }
 
 
+    /**
+     * tratando a exceção de EmailEmUso
+     * @param e
+     * @return
+     */
     @ExceptionHandler(EmailEmUsoException.class)
     public ProblemDetail handleEmailEmUso (EmailEmUsoException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -82,6 +90,11 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
     }
 
 
+    /**
+     * tratando a exceção de Não encontrado
+     * @param e
+     * @return
+     */
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNaoEncontrado (NotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
@@ -90,6 +103,11 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 
         return problemDetail;
     }
+    /**
+     * tratando a exceção de nome incorreto
+     * @param e
+     * @return
+     */
     @ExceptionHandler(NomeIncorretoException.class)
     public ProblemDetail handleNomeIncorreto (NomeIncorretoException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -99,6 +117,11 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
         return problemDetail;
     }
 
+    /**
+     * tratando a exceção de Ano de nascimento
+     * @param e
+     * @return
+     */
     @ExceptionHandler(AnoNascimentoException.class)
     public ProblemDetail handleNomeIncorreto (AnoNascimentoException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -107,6 +130,7 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 
         return problemDetail;
     }
+
 
     public ResponseEntity<ErrorResponse> handleNotFoundWithErrorResponse(NotFoundException e) {
         ErrorResponse error = new ErrorResponse("NOT_FOUND", e.getMessage());
