@@ -76,9 +76,8 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
 
 
     /**
-     * tratando a exceção de EmailEmUso
-     * @param e
-     * @return
+     * Trata EmailEmUsoException retornando ProblemDetail com status 400 (Bad Request).
+     * O type define um link para referência de regra de negócio.
      */
     @ExceptionHandler(EmailEmUsoException.class)
     public ProblemDetail handleEmailEmUso (EmailEmUsoException e) {
@@ -90,10 +89,9 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
     }
 
 
+
     /**
-     * tratando a exceção de Não encontrado
-     * @param e
-     * @return
+     * Trata NotFoundException retornando ProblemDetail com status 404 (Not Found).
      */
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNaoEncontrado (NotFoundException e) {
@@ -104,9 +102,7 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
         return problemDetail;
     }
     /**
-     * tratando a exceção de nome incorreto
-     * @param e
-     * @return
+     * Trata tentativas de cadastro ou acesso por usuários com números no nome.
      */
     @ExceptionHandler(NomeIncorretoException.class)
     public ProblemDetail handleNomeIncorreto (NomeIncorretoException e) {
@@ -118,9 +114,7 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
     }
 
     /**
-     * tratando a exceção de Ano de nascimento
-     * @param e
-     * @return
+     * Trata tentativas de cadastro ou acesso por usuários menores de 13 anos.
      */
     @ExceptionHandler(AnoNascimentoException.class)
     public ProblemDetail handleNomeIncorreto (AnoNascimentoException e) {
