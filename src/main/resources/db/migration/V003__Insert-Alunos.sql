@@ -7,7 +7,7 @@ INSERT INTO alunos (name,data_nascimento , email, classe, curso) VALUES ('Mohamm
 ('João Ricardo', '2008-08-19', 'joaoromano@gmail.com', '2B', 'Informática'),
 ('Otavio Matias', '2008-12-27', 'otaviomed@gmail.com', '2B', 'Informática'),
 ('Juliana Castro', '2008-12-11', 'juliana.castro@email.com', '1D', 'Design Gráfico'),
-('Lucas Almeida', '2009-10-21', 'lucas.almeida@email.com', '2D', 'Engenharia');
+('Lucas Almeida', '2009-10-21', 'lucas.almeida@email.com', '2D', 'Engenharia'),
 ('Mariana Costa', '2007-02-15', 'mariana.costa@email.com', '1A', 'Enfermagem'),
 ('Ricardo Santos', '2004-07-22', 'ricardo.santos@email.com', '3B', 'Engenharia'),
 ('Camila Fernandes', '2006-09-30', 'camila.fernandes@email.com', '2C', 'Direito'),
