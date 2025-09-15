@@ -1,0 +1,275 @@
+{
+	"info": {
+		"_postman_id": "07790d4a-7acf-455c-b3e2-030b0ad81d77",
+		"name": "RankingAtividades",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41589428"
+	},
+	"item": [
+		{
+			"name": "Requisição - Alunos",
+			"item": [
+				{
+					"name": "get /alunos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/alunos",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"alunos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get /alunos/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/alunos/1",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"alunos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post /alunos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"123213213123\",\r\n    \"email\": \"daniel.rocha@sdadssad\",\r\n    \"dataNascimento\": \"21-02-2003\",\r\n    \"curso\": \"Sistemas de Informação\",\r\n    \"classe\": \"3A\"  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rankingAtividades}}/alunos",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"alunos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put /alunos/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"daniel.rochasd@sdsdddadssad\",\r\n    \"curso\": \"Sistemas de Informação\",\r\n    \"classe\": \"3A\"  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rankingAtividades}}/alunos/5",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"alunos",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete /alunos/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/alunos/",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"alunos",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requisição - Atividades",
+			"item": [
+				{
+					"name": "get /atividades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get /atividades/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades/20",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post /atividades",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"alunoId\" : {\r\n        \"id\" : 10\r\n    },\r\n    \"descricao\" : \"Bora bill da Silva Santos Vieira\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put /atividades/{id}",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"descricao\" : \"Roberto fazbear\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades/21",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete /atividades/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades/21",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades",
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requisição não CRUD - Status atividade",
+			"item": [
+				{
+					"name": "put - /atividade/{id}/finalizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades/1/finalizar",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades",
+								"1",
+								"finalizar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete - /atividade/{id}/finalizar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{rankingAtividades}}/atividades/1/finalizar",
+							"host": [
+								"{{rankingAtividades}}"
+							],
+							"path": [
+								"atividades",
+								"1",
+								"finalizar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
