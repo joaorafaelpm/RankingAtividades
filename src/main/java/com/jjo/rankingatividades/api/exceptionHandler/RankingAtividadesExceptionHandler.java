@@ -61,7 +61,7 @@ public class RankingAtividadesExceptionHandler extends ResponseEntityExceptionHa
                 .collect(Collectors.toMap(objectError -> ((FieldError) objectError).getField() ,
                         objectError -> messageSource.getMessage(objectError , LocaleContextHolder.getLocale()))) ;
 
-        problemDetail.setProperty("campos com erro" , fields);
+        problemDetail.setProperty("error_fields" , fields);
 
         return this.handleExceptionInternal(ex, problemDetail , headers, status, request);
     }
