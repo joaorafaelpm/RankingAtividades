@@ -1,6 +1,6 @@
 import styles from "./Search.module.css";
 
-export default function Search({ handleOnChange ,placeholder, value , name , type}) {
+export default function Search({ handleOnChange ,placeholder, name , type}) {
   return (
     <label className={styles.form_control}>
       <input
@@ -8,7 +8,6 @@ export default function Search({ handleOnChange ,placeholder, value , name , typ
         name={name}
         placeholder={placeholder}
         onChange={handleOnChange}
-        value={value}
       />
     </label>
   );

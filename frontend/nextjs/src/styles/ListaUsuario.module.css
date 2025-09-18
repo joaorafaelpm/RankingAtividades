@@ -1,0 +1,8 @@
+.user_list {
+    background: #991232;
+    width: 100%;
+    margin: 100em 5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

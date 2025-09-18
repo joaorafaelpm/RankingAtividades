@@ -165,3 +165,16 @@ a.secondary {
     filter: invert();
   }
 }
+
+
+/* Criado por mim */
+
+
+.user_list {
+  width: 100%;
+  margin: 5em auto;          /* centraliza horizontalmente */
+  display: flex;
+  flex-wrap: wrap;          /* 🔑 permite quebrar para baixo */
+  gap: 16px;                /* espaço entre os itens */
+  justify-content: center;  /* centraliza o conteúdo */
+}
